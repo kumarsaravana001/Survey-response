@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conservation Volunteering Survey</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --leaf: #2D6A4F;
+  --leaf-light: #40916C;
+  --leaf-pale: #B7E4C7;
+  --earth: #774936;
+  --earth-light: #A68A72;
+  --sand: #F5F0E8;
+  --sand-deep: #EDE5D8;
+  --ink: #1B1B1B;
+  --ink-soft: #4A4A4A;
+  --white: #FDFBF7;
+  --accent: #D4A373;
+  --coral: #E07A5F;
+  --sky: #457B9D;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--sand);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.bg-pattern {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(45,106,79,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 85% 80%, rgba(212,163,115,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(69,123,157,0.04) 0%, transparent 60%);
+}
+
+.leaf-deco {
+  position: fixed;
+  font-size: 120px;
+  opacity: 0.04;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+.leaf-deco.l1 { top: 5%; left: -20px; transform: rotate(-30deg); }
+.leaf-deco.l2 { top: 40%; right: -30px; transform: rotate(45deg); }
+.leaf-deco.l3 { bottom: 10%; left: 5%; transform: rotate(15deg); }
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+/* ── Hero ── */
+.hero {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeUp 0.8s ease-out;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--leaf);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 5vw, 42px);
+  color: var(--leaf);
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.hero p {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  max-width: 540px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+/* ── Progress ── */
+.progress-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(245,240,232,0.92);
+  backdrop-filter: blur(12px);
+  padding: 12px 0;
+  margin-bottom: 20px;
+}
+
+.progress-bar-outer {
+  height: 4px;
+  background: var(--sand-deep);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--leaf), var(--leaf-light));
+  border-radius: 4px;
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.progress-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--leaf-light);
+  margin-top: 6px;
+  text-align: right;
+  letter-spacing: 0.5px;
+}
+
+/* ── Cards ── */
+.q-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 32px 28px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeUp 0.6s ease-out both;
+}
+
+.q-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.q-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--leaf);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.q-card h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 19px;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+.q-type {
+  font-size: 12px;
+  color: var(--earth-light);
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.q-required::after {
+  content: ' *';
+  color: var(--coral);
+}
+
+/* ── Inputs ── */
+.option-group { display: flex; flex-direction: column; gap: 8px; }
+
+.option-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.option-item:hover {
+  border-color: var(--leaf-pale);
+  background: rgba(183,228,199,0.08);
+}
+
+.option-item input {
+  position: absolute;
+  opacity: 0;
+  width: 0; height: 0;
+}
+
+.option-item .custom-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.option-item .custom-radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.option-item input:checked ~ .custom-check {
+  background: var(--leaf);
+  border-color: var(--leaf);
+}
+
+.option-item input:checked ~ .custom-check::after {
+  content: '✓';
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.option-item input:checked ~ .custom-radio {
+  border-color: var(--leaf);
+  border-width: 6px;
+}
+
+.option-item input:checked ~ .opt-label {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.option-item.selected {
+  border-color: var(--leaf-pale);
+  background: rgba(183,228,199,0.1);
+}
+
+.opt-label { flex: 1; }
+
+/* Scale */
+.scale-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--earth-light);
+  margin-bottom: 12px;
+}
+
+.scale-btn {
+  flex: 1;
+  aspect-ratio: 1;
+  max-width: 56px;
+  border: 2px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  background: var(--white);
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scale-btn:hover {
+  border-color: var(--leaf-pale);
+  background: rgba(183,228,199,0.1);
+}
+
+.scale-btn.active {
+  background: var(--leaf);
+  color: white;
+  border-color: var(--leaf);
+  transform: scale(1.08);
+  box-shadow: 0 3px 12px rgba(45,106,79,0.25);
+}
+
+/* Text input */
+.text-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: transparent;
+  outline: none;
+  transition: border-color 0.25s ease;
+}
+
+.text-input:focus {
+  border-color: var(--leaf-light);
+}
+
+.text-input::placeholder {
+  color: #bbb;
+}
+
+/* Other field */
+.other-input {
+  margin-top: 8px;
+  padding-left: 44px;
+  display: none;
+}
+
+.other-input.show { display: block; }
+
+/* ── Section divider ── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 32px 0 16px;
+  animation: fadeUp 0.6s ease-out both;
+}
+
+.section-divider span {
+  font-family: 'DM Serif Display', serif;
+  font-size: 14px;
+  color: var(--leaf-light);
+  white-space: nowrap;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--leaf-pale), transparent);
+}
+
+/* ── Conditional section ── */
+.conditional { display: none; }
+.conditional.show { display: block; }
+
+/* ── Submit ── */
+.submit-wrap {
+  margin-top: 32px;
+  text-align: center;
+  animation: fadeUp 0.6s ease-out both;
+}
+
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--leaf);
+  color: var(--white);
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 16px 48px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(45,106,79,0.2);
+}
+
+.submit-btn:hover {
+  background: var(--leaf-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(45,106,79,0.3);
+}
+
+.submit-btn:active { transform: translateY(0); }
+.submit-btn:disabled { opacity: 0.7; cursor: wait; }
+
+/* Validation */
+.q-card.error {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 2px rgba(224,122,95,0.15);
+}
+
+.q-card .error-msg {
+  display: none;
+  font-size: 12px;
+  color: var(--coral);
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.q-card.error .error-msg { display: block; }
+
+.text-input.input-error {
+  border-color: var(--coral);
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.submit-note {
+  font-size: 12px;
+  color: var(--earth-light);
+  margin-top: 12px;
+}
+
+/* ── Toast / success ── */
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(45,106,79,0.95);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--white);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.success-overlay.show { display: flex; }
+
+.success-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+  animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+.success-overlay h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px;
+  margin-bottom: 12px;
+  animation: fadeUp 0.6s ease-out 0.3s both;
+}
+
+.success-overlay p {
+  font-size: 15px;
+  opacity: 0.85;
+  font-weight: 300;
+  animation: fadeUp 0.6s ease-out 0.4s both;
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .q-card { padding: 24px 20px; }
+  .container { padding: 24px 16px 40px; }
+  .scale-btn { max-width: 48px; font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-pattern"></div>
+<div class="leaf-deco l1">🌿</div>
+<div class="leaf-deco l2">🍃</div>
+<div class="leaf-deco l3">🌱</div>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">🌍 Survey</div>
+    <h1>Environmental Volunteering in India</h1>
+    <p>We're exploring a simple but important question: why isn't growing environmental awareness in India translating into real, on-ground action? While more people today are aware of climate issues, hands-on participation still remains limited.</p>
+    <p style="margin-top:12px;">We're compiling a list of genuine, structured <strong>volunteering and internship opportunities</strong> in the environmental and conservation space across India. This form helps us understand what's missing. If you care about the environment and have ever thought about contributing your time or skills, your input will help shape better, more accessible opportunities.</p>
+    <p style="margin-top:16px;color:var(--leaf);font-weight:500;">⏱ Takes just 2 minutes</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progressBar"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">0 of 14 answered</div>
+  </div>
+
+  <form id="surveyForm" novalidate>
+
+    <!-- Q1 -->
+    <div class="q-card" style="animation-delay:0.1s" data-q="q1">
+      <div class="q-num">1</div>
+      <h3 class="q-required">What best describes you?</h3>
+      <div class="q-type">Choose one</div>
+      <div class="option-group">
+        <label class="option-item"><input type="radio" name="q1" value="College student"><span class="custom-radio"></span><span class="opt-label">College student</span></label>
+        <label class="option-item"><input type="radio" name="q1" value="Working professional"><span class="custom-radio"></span><span class="opt-label">Working professional</span></label>
+        <label class="option-item"><input type="radio" name="q1" value="Freelancer / Gap year"><span class="custom-radio"></span><span class="opt-label">Freelancer / Gap year</span></label>
+        <label class="option-item"><input type="radio" name="q1" value="Other"><span class="custom-radio"></span><span class="opt-label">Other</span></label>
+      </div>
+      <div class="error-msg">Please select an option</div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card" style="animation-delay:0.15s" data-q="q2">
+      <div class="q-num">2</div>
+      <h3>Have you ever done any of the following?</h3>
+      <div class="q-type">Select all that apply</div>
+      <div class="option-group">
+        <label class="option-item"><input type="checkbox" name="q2" value="Volunteered (any cause)"><span class="custom-check"></span><span class="opt-label">Volunteered (any cause)</span></label>
+        <label class="option-item"><input type="checkbox" name="q2" value="Traveled for experiences"><span class="custom-check"></span><span class="opt-label">Traveled for experiences (not just tourism)</span></label>
+        <label class="option-item"><input type="checkbox" name="q2" value="Environmental activities"><span class="custom-check"></span><span class="opt-label">Participated in environmental activities</span></label>
+        <label class="option-item"><input type="checkbox" name="q2" value="None"><span class="custom-check"></span><span class="opt-label">None of the above</span></label>
+      </div>
+      <div class="error-msg">Please select at least one option</div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card" style="animation-delay:0.2s" data-q="q3">
+      <div class="q-num">3</div>
+      <h3 class="q-required">How interested are you in environmental or conservation activities?</h3>
+      <div class="q-type">Rate on a scale</div>
+      <div class="scale-labels"><span>Not interested</span><span>Very interested</span></div>
+      <div class="scale-group">
+        <button type="button" class="scale-btn" data-val="1">1</button>
+        <button type="button" class="scale-btn" data-val="2">2</button>
+        <button type="button" class="scale-btn" data-val="3">3</button>
+        <button type="button" class="scale-btn" data-val="4">4</button>
+        <button type="button" class="scale-btn" data-val="5">5</button>
+      </div>
+      <input type="hidden" name="q3" value="">
+      <div class="error-msg">Please select a rating</div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card" style="animation-delay:0.25s" data-q="q4">
+      <div class="q-num">4</div>
+      <h3>What motivates you to participate?</h3>
+      <div class="q-type">Select up to 3</div>
+      <div class="option-group">
+        <label class="option-item"><input type="checkbox" name="q4" value="Environmental protection" data-limit="3"><span class="custom-check"></span><span class="opt-label">Contributing to environmental protection</span></label>
+        <label class="option-item"><input type="checkbox" name="q4" value="Learning about nature" data-limit="3"><span class="custom-check"></span><span class="opt-label">Learning about nature and sustainability</span></label>
+        <label class="option-item"><input type="checkbox" name="q4" value="Travel with purpose" data-limit="3"><span class="custom-check"></span><span class="opt-label">Travel with purpose (beyond tourism)</span></label>
+        <label class="option-item"><input type="checkbox" name="q4" value="Personal growth" data-limit="3"><span class="custom-check"></span><span class="opt-label">Personal growth / meaningful experiences</span></label>
+        <label class="option-item"><input type="checkbox" name="q4" value="Like-minded people" data-limit="3"><span class="custom-check"></span><span class="opt-label">Meeting like-minded people</span></label>
+        <label class="option-item"><input type="checkbox" name="q4" value="Building skills" data-limit="3"><span class="custom-check"></span><span class="opt-label">Building skills or experience</span></label>
+        <label class="option-item"><input type="checkbox" name="q4" value="Resume / career" data-limit="3"><span class="custom-check"></span><span class="opt-label">Enhancing resume / career opportunities</span></label>
+        <label class="option-item"><input type="checkbox" name="q4" value="Part of larger impact" data-limit="3"><span class="custom-check"></span><span class="opt-label">Feeling part of a larger impact</span></label>
+        <label class="option-item"><input type="checkbox" name="q4" value="Digital detox" data-limit="3"><span class="custom-check"></span><span class="opt-label">Escaping routine / digital detox</span></label>
+        <label class="option-item"><input type="checkbox" name="q4" value="Other" data-limit="3" data-other="q4other"><span class="custom-check"></span><span class="opt-label">Other</span></label>
+      </div>
+      <div class="other-input" id="q4other"><input type="text" class="text-input" name="q4_other" placeholder="Please specify..."></div>
+      <div class="error-msg">Please select at least one motivation</div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card" data-q="q5">
+      <div class="q-num">5</div>
+      <h3>Have you ever considered volunteering in environmental or conservation projects?</h3>
+      <div class="q-type">Choose one</div>
+      <div class="option-group">
+        <label class="option-item"><input type="radio" name="q5" value="Yes"><span class="custom-radio"></span><span class="opt-label">Yes</span></label>
+        <label class="option-item"><input type="radio" name="q5" value="No"><span class="custom-radio"></span><span class="opt-label">No</span></label>
+      </div>
+      <div class="error-msg">Please select an option</div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="q-card" data-q="q6">
+      <div class="q-num">6</div>
+      <h3>If you haven't participated, what stopped you?</h3>
+      <div class="q-type">Select all that apply</div>
+      <div class="option-group">
+        <label class="option-item"><input type="checkbox" name="q6" value="Didn't know where to find"><span class="custom-check"></span><span class="opt-label">Didn't know where to find opportunities</span></label>
+        <label class="option-item"><input type="checkbox" name="q6" value="Didn't feel skilled"><span class="custom-check"></span><span class="opt-label">Didn't feel skilled enough</span></label>
+        <label class="option-item"><input type="checkbox" name="q6" value="Lack of time"><span class="custom-check"></span><span class="opt-label">Lack of time</span></label>
+        <label class="option-item"><input type="checkbox" name="q6" value="Safety concerns"><span class="custom-check"></span><span class="opt-label">Safety concerns</span></label>
+        <label class="option-item"><input type="checkbox" name="q6" value="Not sure what to expect"><span class="custom-check"></span><span class="opt-label">Not sure what to expect</span></label>
+        <label class="option-item"><input type="checkbox" name="q6" value="Travel/logistics"><span class="custom-check"></span><span class="opt-label">Travel / logistics issues</span></label>
+        <label class="option-item"><input type="checkbox" name="q6" value="Other" data-other="q6other"><span class="custom-check"></span><span class="opt-label">Other</span></label>
+      </div>
+      <div class="other-input" id="q6other"><input type="text" class="text-input" name="q6_other" placeholder="Please specify..."></div>
+      <div class="error-msg">Please select at least one option</div>
+    </div>
+
+    <div class="section-divider"><span>Preferences</span></div>
+
+    <!-- Q7 -->
+    <div class="q-card" data-q="q7">
+      <div class="q-num">7</div>
+      <h3>What type of environmental activities interest you most?</h3>
+      <div class="q-type">Select all that apply</div>
+      <div class="option-group">
+        <label class="option-item"><input type="checkbox" name="q7" value="Wildlife conservation"><span class="custom-check"></span><span class="opt-label">Wildlife conservation</span></label>
+        <label class="option-item"><input type="checkbox" name="q7" value="Marine / coastal"><span class="custom-check"></span><span class="opt-label">Marine / coastal work</span></label>
+        <label class="option-item"><input type="checkbox" name="q7" value="Ecological restoration"><span class="custom-check"></span><span class="opt-label">Ecological restoration</span></label>
+        <label class="option-item"><input type="checkbox" name="q7" value="Circular economies"><span class="custom-check"></span><span class="opt-label">Circular economies</span></label>
+        <label class="option-item"><input type="checkbox" name="q7" value="Waste management"><span class="custom-check"></span><span class="opt-label">Waste management / clean-ups</span></label>
+        <label class="option-item"><input type="checkbox" name="q7" value="Climate action"><span class="custom-check"></span><span class="opt-label">Climate action projects</span></label>
+        <label class="option-item"><input type="checkbox" name="q7" value="Community-based"><span class="custom-check"></span><span class="opt-label">Community-based projects</span></label>
+        <label class="option-item"><input type="checkbox" name="q7" value="Other" data-other="q7other"><span class="custom-check"></span><span class="opt-label">Other</span></label>
+      </div>
+      <div class="other-input" id="q7other"><input type="text" class="text-input" name="q7_other" placeholder="Please specify..."></div>
+      <div class="error-msg">Please select at least one activity</div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="q-card" data-q="q8">
+      <div class="q-num">8</div>
+      <h3>Where would you prefer to volunteer?</h3>
+      <div class="q-type">Choose one</div>
+      <div class="option-group">
+        <label class="option-item"><input type="radio" name="q8" value="Near my city"><span class="custom-radio"></span><span class="opt-label">Near my city</span></label>
+        <label class="option-item"><input type="radio" name="q8" value="Anywhere in India"><span class="custom-radio"></span><span class="opt-label">Anywhere in India</span></label>
+        <label class="option-item"><input type="radio" name="q8" value="International"><span class="custom-radio"></span><span class="opt-label">International</span></label>
+      </div>
+      <div class="error-msg">Please select a preference</div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="q-card" data-q="q9">
+      <div class="q-num">9</div>
+      <h3>What duration would you prefer?</h3>
+      <div class="q-type">Choose one</div>
+      <div class="option-group">
+        <label class="option-item"><input type="radio" name="q9" value="1-3 days"><span class="custom-radio"></span><span class="opt-label">1–3 days</span></label>
+        <label class="option-item"><input type="radio" name="q9" value="1-2 weeks"><span class="custom-radio"></span><span class="opt-label">1–2 weeks</span></label>
+        <label class="option-item"><input type="radio" name="q9" value="1+ month"><span class="custom-radio"></span><span class="opt-label">1+ month</span></label>
+      </div>
+      <div class="error-msg">Please select a duration</div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="q-card" data-q="q10">
+      <div class="q-num">10</div>
+      <h3>How often would you realistically participate?</h3>
+      <div class="q-type">Choose one</div>
+      <div class="option-group">
+        <label class="option-item"><input type="radio" name="q10" value="Once a year"><span class="custom-radio"></span><span class="opt-label">Once a year</span></label>
+        <label class="option-item"><input type="radio" name="q10" value="2-3 times a year"><span class="custom-radio"></span><span class="opt-label">2–3 times a year</span></label>
+        <label class="option-item"><input type="radio" name="q10" value="Once a month"><span class="custom-radio"></span><span class="opt-label">Once a month</span></label>
+        <label class="option-item"><input type="radio" name="q10" value="Once a week"><span class="custom-radio"></span><span class="opt-label">Once a week</span></label>
+      </div>
+      <div class="error-msg">Please select a frequency</div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="q-card" data-q="q11">
+      <div class="q-num">11</div>
+      <h3>What would you expect in return for volunteering?</h3>
+      <div class="q-type">Select all that apply</div>
+      <div class="option-group">
+        <label class="option-item"><input type="checkbox" name="q11" value="Free stay/food"><span class="custom-check"></span><span class="opt-label">Free stay / food</span></label>
+        <label class="option-item"><input type="checkbox" name="q11" value="Certification"><span class="custom-check"></span><span class="opt-label">Certification</span></label>
+        <label class="option-item"><input type="checkbox" name="q11" value="Learning experience"><span class="custom-check"></span><span class="opt-label">Learning experience</span></label>
+        <label class="option-item"><input type="checkbox" name="q11" value="Networking"><span class="custom-check"></span><span class="opt-label">Networking / community</span></label>
+        <label class="option-item"><input type="checkbox" name="q11" value="Travel experience"><span class="custom-check"></span><span class="opt-label">Travel experience</span></label>
+        <label class="option-item"><input type="checkbox" name="q11" value="Stipend"><span class="custom-check"></span><span class="opt-label">Stipend</span></label>
+        <label class="option-item"><input type="checkbox" name="q11" value="Other" data-other="q11other"><span class="custom-check"></span><span class="opt-label">Other</span></label>
+      </div>
+      <div class="other-input" id="q11other"><input type="text" class="text-input" name="q11_other" placeholder="Please specify..."></div>
+      <div class="error-msg">Please select at least one expectation</div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="q-card" data-q="q12">
+      <div class="q-num">12</div>
+      <h3>Would you be open to bearing a minimum cost for accommodation and food for a well-organized, impactful volunteering experience?</h3>
+      <div class="q-type">Some projects have limited funding and can't afford to host but need people support</div>
+      <div class="option-group">
+        <label class="option-item"><input type="radio" name="q12" value="Yes"><span class="custom-radio"></span><span class="opt-label">Yes</span></label>
+        <label class="option-item"><input type="radio" name="q12" value="Maybe"><span class="custom-radio"></span><span class="opt-label">Maybe</span></label>
+        <label class="option-item"><input type="radio" name="q12" value="No"><span class="custom-radio"></span><span class="opt-label">No</span></label>
+      </div>
+      <div class="error-msg">Please select an option</div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="q-card" data-q="q13">
+      <div class="q-num">13</div>
+      <h3>Would you like to be notified when such opportunities are available?</h3>
+      <div class="q-type">Choose one</div>
+      <div class="option-group">
+        <label class="option-item"><input type="radio" name="q13" value="Yes" id="notifyYes"><span class="custom-radio"></span><span class="opt-label">Yes</span></label>
+        <label class="option-item"><input type="radio" name="q13" value="No" id="notifyNo"><span class="custom-radio"></span><span class="opt-label">No</span></label>
+      </div>
+      <div class="error-msg">Please select an option</div>
+    </div>
+
+    <!-- Contact (conditional) -->
+    <div class="q-card conditional" id="contactSection" data-q="q14">
+      <div class="q-num">14</div>
+      <h3>Your contact details</h3>
+      <div class="q-type">So we can reach you with opportunities</div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label style="font-size:13px;font-weight:500;margin-bottom:6px;display:block;color:var(--ink-soft)">Name</label>
+          <input type="text" class="text-input" name="name" placeholder="Your name">
+        </div>
+        <div>
+          <label style="font-size:13px;font-weight:500;margin-bottom:6px;display:block;color:var(--ink-soft)">Email or WhatsApp Number</label>
+          <input type="text" class="text-input" name="contact" placeholder="email@example.com or +91...">
+        </div>
+      </div>
+      <div class="error-msg">Please enter your name and contact details</div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-wrap">
+      <button type="submit" class="submit-btn">
+        Submit Response
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+      </button>
+      <div class="submit-note">Your responses help us build better conservation opportunities.</div>
+    </div>
+
+  </form>
+</div>
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">🌿</div>
+  <h2>Thank you!</h2>
+  <p>Your response has been recorded. Together, we can make a difference.</p>
+</div>
+
+<script>
+// Progress tracking
+const totalQuestions = 14;
+const answered = new Set();
+
+function updateProgress() {
+  const pct = Math.round((answered.size / totalQuestions) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${answered.size} of ${totalQuestions} answered`;
+}
+
+// Track answers
+document.querySelectorAll('input[type="radio"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const card = r.closest('.q-card');
+    if (card) {
+      answered.add(card.dataset.q);
+      updateProgress();
+    }
+    // Highlight selected
+    card.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
+    r.closest('.option-item').classList.add('selected');
+  });
+});
+
+document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const card = cb.closest('.q-card');
+    if (card) {
+      const any = card.querySelector('input[type="checkbox"]:checked');
+      if (any) answered.add(card.dataset.q);
+      else answered.delete(card.dataset.q);
+      updateProgress();
+    }
+    // Toggle style
+    if (cb.checked) cb.closest('.option-item').classList.add('selected');
+    else cb.closest('.option-item').classList.remove('selected');
+
+    // Limit logic for Q4
+    if (cb.dataset.limit) {
+      const name = cb.name;
+      const limit = parseInt(cb.dataset.limit);
+      const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+      if (checked.length >= limit) {
+        document.querySelectorAll(`input[name="${name}"]:not(:checked)`).forEach(u => u.disabled = true);
+      } else {
+        document.querySelectorAll(`input[name="${name}"]`).forEach(u => u.disabled = false);
+      }
+    }
+
+    // Other field toggle
+    if (cb.dataset.other) {
+      const el = document.getElementById(cb.dataset.other);
+      if (el) el.classList.toggle('show', cb.checked);
+    }
+  });
+});
+
+// Scale buttons
+document.querySelectorAll('.scale-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const group = btn.closest('.q-card');
+    group.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    group.querySelector('input[type="hidden"]').value = btn.dataset.val;
+    answered.add(group.dataset.q);
+    updateProgress();
+  });
+});
+
+// Text inputs
+document.querySelectorAll('.text-input[name="name"], .text-input[name="contact"]').forEach(inp => {
+  inp.addEventListener('input', () => {
+    const card = inp.closest('.q-card');
+    if (card) {
+      const nameVal = card.querySelector('[name="name"]').value.trim();
+      const contactVal = card.querySelector('[name="contact"]').value.trim();
+      if (nameVal || contactVal) answered.add(card.dataset.q);
+      else answered.delete(card.dataset.q);
+      updateProgress();
+    }
+  });
+});
+
+// Conditional: show contact section when "Yes" to notifications
+document.querySelectorAll('input[name="q13"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const sec = document.getElementById('contactSection');
+    if (r.value === 'Yes') {
+      sec.classList.add('show');
+    } else {
+      sec.classList.remove('show');
+      answered.delete('q14');
+      updateProgress();
+    }
+  });
+});
+
+// Submit to Google Sheets
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJjXO9JLPUquf-04HDAreMlmQ-H8jAfUqp58v-2z9FiwwFTkkHCOYmlXYZ0sUxFFtw/exec';
+
+// Validation
+function validateForm() {
+  let valid = true;
+  let firstError = null;
+
+  // Clear all previous errors
+  document.querySelectorAll('.q-card.error').forEach(c => c.classList.remove('error'));
+  document.querySelectorAll('.text-input.input-error').forEach(c => c.classList.remove('input-error'));
+
+  // Required questions: radio buttons (q1, q5, q8, q9, q10, q12, q13)
+  ['q1','q5','q8','q9','q10','q12','q13'].forEach(name => {
+    if (!document.querySelector(`input[name="${name}"]:checked`)) {
+      const card = document.querySelector(`[data-q="${name}"]`);
+      card.classList.add('error');
+      valid = false;
+      if (!firstError) firstError = card;
+    }
+  });
+
+  // Required questions: checkboxes (q2, q4, q6, q7, q11)
+  ['q2','q4','q6','q7','q11'].forEach(name => {
+    if (!document.querySelector(`input[name="${name}"]:checked`)) {
+      const card = document.querySelector(`[data-q="${name}"]`);
+      card.classList.add('error');
+      valid = false;
+      if (!firstError) firstError = card;
+    }
+  });
+
+  // Q3: scale
+  if (!document.querySelector('input[name="q3"]').value) {
+    const card = document.querySelector('[data-q="q3"]');
+    card.classList.add('error');
+    valid = false;
+    if (!firstError) firstError = card;
+  }
+
+  // Contact section: only validate if visible (user said Yes to notifications)
+  const contactSection = document.getElementById('contactSection');
+  if (contactSection.classList.contains('show')) {
+    const nameVal = document.querySelector('input[name="name"]').value.trim();
+    const contactVal = document.querySelector('input[name="contact"]').value.trim();
+    if (!nameVal || !contactVal) {
+      contactSection.classList.add('error');
+      if (!nameVal) document.querySelector('input[name="name"]').classList.add('input-error');
+      if (!contactVal) document.querySelector('input[name="contact"]').classList.add('input-error');
+      valid = false;
+      if (!firstError) firstError = contactSection;
+    }
+  }
+
+  // Scroll to first error
+  if (firstError) {
+    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  return valid;
+}
+
+// Clear error when user answers
+document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+  input.addEventListener('change', () => {
+    const card = input.closest('.q-card');
+    if (card) card.classList.remove('error');
+  });
+});
+
+document.querySelectorAll('.scale-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('.q-card');
+    if (card) card.classList.remove('error');
+  });
+});
+
+document.querySelectorAll('input[name="name"], input[name="contact"]').forEach(input => {
+  input.addEventListener('input', () => {
+    input.classList.remove('input-error');
+    const card = input.closest('.q-card');
+    if (card) card.classList.remove('error');
+  });
+});
+
+document.getElementById('surveyForm').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  // Validate first
+  if (!validateForm()) return;
+
+  const btn = e.target.querySelector('.submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+  const fd = new FormData(e.target);
+  const data = {};
+  for (const [k, v] of fd.entries()) {
+    if (data[k]) {
+      if (Array.isArray(data[k])) data[k].push(v);
+      else data[k] = [data[k], v];
+    } else data[k] = v;
+  }
+
+  // Convert arrays to comma-separated strings
+  for (const key in data) {
+    if (Array.isArray(data[key])) data[key] = data[key].join(', ');
+  }
+
+  // Add timestamp
+  data.timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
+  try {
+    // Direct form submission - no CORS issues at all
+    const formEl = document.createElement('form');
+    formEl.method = 'GET';
+    formEl.action = GOOGLE_SCRIPT_URL;
+    formEl.target = 'submit-frame';
+
+    for (const key in data) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = data[key];
+      formEl.appendChild(input);
+    }
+
+    // Create hidden iframe target
+    let iframe = document.getElementById('submit-frame');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = 'submit-frame';
+      iframe.name = 'submit-frame';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+
+    document.body.appendChild(formEl);
+    formEl.submit();
+    document.body.removeChild(formEl);
+
+    // Show success after brief delay
+    setTimeout(() => {
+      document.getElementById('successOverlay').classList.add('show');
+    }, 1500);
+  } catch (err) {
+    alert('Something went wrong. Please try again.');
+    btn.disabled = false;
+    btn.innerHTML = 'Submit Response <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>';
+  }
+});
+</script>
+</body>
+</html>
